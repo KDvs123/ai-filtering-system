@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyword Extractor</title>
+</head>
+<body>
+    <h1>Keyword Extractor</h1>
+    <textarea id="prompt" rows="10" cols="50" placeholder="Enter your prompt here"></textarea><br><br>
+    <button onclick="processKeyword()">Submit</button>
+
+    <h2>Result:</h2>
+    <pre id="result"></pre>
+    <script>
+        async function processKeyword() {
+            const prompt = document.getElementById('prompt').value;
+            try {
+                const response = await fetch('http://127.0.0.1:5000/process_keyword', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ keyword: prompt })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
